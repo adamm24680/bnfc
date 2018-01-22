@@ -38,9 +38,9 @@ cf2Abstract byteStrings ghcExtensions functor name cf = render $ vcat $
   (if byteStrings then "import qualified Data.ByteString.Char8 as BS" else empty) :
   (if ghcExtensions then "import Data.Data (Data,Typeable)" else empty) :
   "import Data.String (IsString(..))" :
-  (if ghcExtensions then "import GHC.Generics (Generic)" else empty) :
+  (if ghcExtensions then "import GHC.Generics (Generic, Generic1)" else empty) :
   (map (\c -> prSpecialData byteStrings (isPositionCat cf c) derivingClasses c) (specialCats cf)
-  ++ map (prData functor derivingClasses) (cf2data cf))
+  ++ map (prData functor (derivingClasses ++ ["Generic1" | functor])) (cf2data cf))
   where
     derivingClasses = ["Eq","Ord","Show","Read"]
         ++ if ghcExtensions then ["Data","Typeable","Generic"] else []
